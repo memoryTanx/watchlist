@@ -1,0 +1,12 @@
+# Specify filepatterns you want git to ignore.
+
+*.pyc
+*~
+__pycache__
+.DS_Store
+.env
+*.db
+htmlcov/
+.coverage
+venv
+env
