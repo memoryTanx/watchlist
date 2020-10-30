@@ -3,18 +3,26 @@
 <head>
     <meta charset="utf-8">
     <title>{{ name }}'s Watchlist</title>
+
+    <link rel="icon" type="text/css" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>{{ name }}'s Watchlist</h2>
+    <h2>
+        <img alt="苦难太多了" class="avatar" src="{{ url_for('static', filename='images/微信图片_20190308001954.jpg') }}">
+        {{ name }}'s Watchlist
+    </h2>
     {# 使用 length 过滤器获取 movies 变量的长度 #}
     <p>{{ movies|length }} Titles</p>
-    <ul>
+    <ul class="movie-list">
         {% for movie in movies %}  {# 迭代 movies 变量 #}
         <li>{{ movie.title }} - {{ movie.year }}</li>  {# 等同于 movie['title'] #}
         {% endfor %}  {# 使用 endfor 标签结束 for 语句 #}
     </ul>
+    <img alt="逃跑的程序员" class="totoro" src="{{ url_for('static', filename='images/微信图片_20190308002126.gif') }}">
     <footer>
-        <small>&copy; 2018 <a href="http://helloflask.com/tutorial">HelloFlask</a></small>
+        <small>&copy; 2020 <a href="http://helloflask.com/tutorial">旭日东升集团</a></small>
     </footer>
 </body>
 </html>
