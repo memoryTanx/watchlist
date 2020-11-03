@@ -48,7 +48,7 @@ def index():
         year = request.form.get('year')
         # 验证数据
         if not title or not year or len(year) > 4 or len(title) > 60:
-            flash('输入无效！')
+            flash('输入有误！')
             return redirect(url_for('index')) # 重定向回主页
         # 保存表单数据到数据库
         movie = Movie(title=title, year=year) # 创建记录
@@ -67,7 +67,7 @@ def login():
         password = request.form['password']
 
         if not username or not password:
-            flash('输入无效！')
+            flash('输入有误！')
             return redirect(url_for('login'))
 
         user = User.query.first()
@@ -99,7 +99,7 @@ def edit(movie_id):
         year = request.form['year']
 
         if not title or not year or len(year) > 4 or len(title) > 60:
-            flash('Invalid input.')
+            flash('输入有误！')
             return redirect(url_for('edit', movie_id=movie_id))  # 重定向回对应的编辑页面
 
         movie.title = title  # 更新标题
@@ -126,7 +126,7 @@ def settings():
         name = request.form['name']
 
         if not name or len(name) > 20:
-            flash('输入无效！')
+            flash('输入有误！')
             return redirect(url_for('settings'))
 
         current_user.name = name
@@ -171,7 +171,7 @@ def initdb(drop):
     if drop:
         db.drop_all()
     db.create_all()
-    click.echo('Initialized database')
+    click.echo('Initialized database.')
 
 
 @app.cli.command()
