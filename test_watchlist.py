@@ -1,6 +1,9 @@
 import unittest
 
-from app import app, db, Movie, User, forge, initdb
+from watchlist import app, db
+from watchlist.models import Movie, User
+from watchlist.commands import forge, initdb
+from watchlist.errors import page_not_found
 
 
 class WatchlistTestCase(unittest.TestCase):
