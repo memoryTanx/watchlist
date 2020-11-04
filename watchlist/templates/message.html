@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>[{{ movie.title }}] {{ messages|length }} Messages</h3>
+<form method="post">
+    Name <input type="text" name="talker" autocomplete="off" required="">
+    Message <input type="text" name="message" autocomplete="off" required="">
+    <input class="btn" type="submit" name="submit" value="Add">
+</form>
+<ul class="movie-list">
+    {% for message in messages %}
+    <li>{{ message.talker }} - {{ message.message }}</li>
+    {% endfor %}
+</ul>
+<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/微信图片_20190308002126.gif') }}" title="to~to~ro~">
+{% endblock %}

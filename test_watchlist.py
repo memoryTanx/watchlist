@@ -1,7 +1,7 @@
 import unittest
 
 from watchlist import app, db
-from watchlist.models import Movie, User
+from watchlist.models import Movie, User, Message
 from watchlist.commands import forge, initdb
 from watchlist.errors import page_not_found
 
@@ -17,11 +17,12 @@ class WatchlistTestCase(unittest.TestCase):
         # 创建数据库和表
         db.create_all()
         # 创建测试数据，一个用户，一个电影条目
-        user = User(name='Test', username='test')
+        user = User(name='Test', username= 'test')
         user.set_password('123')
         movie = Movie(title='Test Movie Title', year='2019')
+        message = Message(movie_id=1, talker='Tester', message='on test')
         # 使用 add_all() 方法一次添加多个模型类实例，传入列表
-        db.session.add_all([user, movie])
+        db.session.add_all([user, movie, message])
         db.session.commit()
 
         self.client = app.test_client()  # 创建测试客户端
@@ -238,6 +239,42 @@ class WatchlistTestCase(unittest.TestCase):
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('修改成功！', data)
+        self.assertIn('输入有误！', data)
+
+    # 测试留言
+    def test_messages(self):
+        
+        # 测试留言页面
+        response = self.client.get('/movie/message/1')
+        data = response.get_data(as_text=True)
+        self.assertIn('Messages', data)
+        self.assertIn('message', data)
+
+        # 测试添加留言
+        response = self.client.post('/movie/message/1', data=dict(
+            talker='小M',
+            message='真不错！'
+        ), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('已留言！', data)
+        self.assertIn('真不错！', data)
+
+        # 测试添加留言，但名称为空
+        response = self.client.post('/movie/message/1', data=dict(
+            talker='',
+            message='真不错！'
+        ), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertNotIn('已留言！', data)
+        self.assertIn('输入有误！', data)
+
+        # 测试添加留言，但留言为空
+        response = self.client.post('/movie/message/1', data=dict(
+            talker='小M',
+            message=''
+        ), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertNotIn('已留言！', data)
         self.assertIn('输入有误！', data)
 
 # 测试虚拟数据

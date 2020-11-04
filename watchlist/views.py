@@ -1,5 +1,5 @@
 from . import app, db
-from .models import User, Movie
+from .models import User, Movie, Message
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -55,6 +55,28 @@ def logout():
     logout_user()
     flash('登出成功！')
     return redirect(url_for('index'))
+
+@app.route('/movie/message/<int:movie_id>', methods=['GET', 'POST'])
+def message(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+
+    if request.method == 'POST':
+        talker = request.form['talker'] #留言人的名称
+        message = request.form['message'] # 留言
+
+        if not talker or not message:
+            flash("输入有误！")
+            return redirect(url_for('message', movie_id=movie_id))
+
+        # 保存表单数据到数据库
+        message = Message(movie_id=movie_id, talker=talker, message=message) # 创建记录
+        db.session.add(message) # 添加到数据库会话
+        db.session.commit() # 提交到数据库会话
+        flash('已留言！')
+        return redirect(url_for('message', movie_id=movie_id))
+
+    messages = Message.query.filter(Message.movie_id==movie_id).order_by(Message.id.desc()).all()
+    return render_template('message.html', messages=messages, movie=movie)
 
 @app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
 @login_required

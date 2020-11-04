@@ -1,7 +1,7 @@
 import click
 
 from . import app, db
-from .models import User, Movie
+from .models import User, Movie, Message
 
 
 @app.cli.command()
@@ -31,12 +31,22 @@ def forge():
         {'title': 'WALL-E', 'year': '2008'},
         {'title': 'The Pork of Music', 'year': '2012'},
     ]
+    messages = [
+        {'movie_id': 1, 'talker': '小1', 'message': '真不错'},
+        {'movie_id': 1, 'talker': '小5', 'message': '针不戳...'},
+        {'movie_id': 2, 'talker': '小2', 'message': '挺好！'},
+        {'movie_id': 3, 'talker': '小3', 'message': '整挺好。'},
+        {'movie_id': 4, 'talker': '小4', 'message': '辣鸡...'},
+    ]
 
     user = User(name=name)
     db.session.add(user)
     for m in movies:
         movie = Movie(title=m['title'], year=m['year'])
         db.session.add(movie)
+    for m in messages:
+        message = Message(movie_id=m['movie_id'], talker=m['talker'], message=m['message'])
+        db.session.add(message)
 
     db.session.commit()
     click.echo('Done.')

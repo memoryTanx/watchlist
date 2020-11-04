@@ -21,3 +21,10 @@ class Movie(db.Model):  # 表名将会是 movie
     title = db.Column(db.String(60))  # 电影标题
     year = db.Column(db.String(4))  # 电影年份
 
+
+class Message(db.Model):
+    """留言板"""
+    id = db.Column(db.Integer, primary_key=True)
+    movie_id = db.Column(db.Integer)
+    talker = db.Column(db.String(20)) #留言人的名称
+    message = db.Column(db.String(200)) # 留言
